@@ -16,8 +16,8 @@ body.mobile-view {
     min-height: var(--mobile-vh, 100dvh);
     display: flex;
     justify-content: center;
-    align-items: stretch;
-    padding: calc(env(safe-area-inset-top) + 12px) clamp(12px, 5vw, 24px) calc(env(safe-area-inset-bottom) + 20px);
+    align-items: center; /* 居中.container，确保上下圆角不溢出 */
+    padding: calc(env(safe-area-inset-top) + 8px) 8px calc(env(safe-area-inset-bottom) + 8px) 8px; /* 上下左右边距均为2px + 安全区域 */
     font-family: var(--font-main);
     background-attachment: fixed;
     box-sizing: border-box;
@@ -80,8 +80,8 @@ body.mobile-view .container {
     background: linear-gradient(180deg, rgba(27, 29, 36, 0.92), rgba(7, 9, 14, 0.95));
     border-radius: 32px;
     padding: clamp(16px, 5vw, 28px);
-    padding-top: calc(env(safe-area-inset-top) + clamp(18px, 6vw, 32px));
-    padding-bottom: calc(env(safe-area-inset-bottom) + clamp(22px, 7vw, 32px));
+    padding-top: clamp(18px, 6vw, 32px);
+    padding-bottom: clamp(22px, 7vw, 32px);
     box-shadow: 0 32px 90px rgba(0, 0, 0, 0.65);
     display: flex;
     flex-direction: column;
@@ -89,7 +89,10 @@ body.mobile-view .container {
     position: relative;
     overflow: visible;
     flex: 1 1 auto;
-    min-height: calc(var(--mobile-vh, 100dvh) - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    min-height: calc(100% - 4px); /* 减去上下margin 2px * 2 */
+    height: calc(100% - 4px); /* 填充可用空间，确保圆角可见 */
+    margin-top: 2px; /* 最小化顶部边距 */
+    margin-bottom: 2px; /* 最小化底部边距 */
     box-sizing: border-box;
 }
 
@@ -399,18 +402,18 @@ body.mobile-view .mobile-quality-chip.active {
 }
 
 body.mobile-view .controls {
-    display: flex;
-    flex-direction: column;
     background: transparent;
     border: none;
     box-shadow: none;
     margin: 0;
-    padding: 0;
+    padding: clamp(12px, 4vw, 24px);
+    padding-bottom: calc(env(safe-area-inset-bottom) + 24px);
     gap: clamp(16px, 5vw, 24px);
     align-items: stretch;
     margin-top: auto;
-    grid-template-columns: unset;
-    grid-template-areas: unset;
+    position: sticky;
+    bottom: calc(env(safe-area-inset-bottom) + 24px);
+    z-index: 10;
 }
 
 body.mobile-view #loadOnlineBtn {
@@ -418,7 +421,6 @@ body.mobile-view #loadOnlineBtn {
 }
 
 body.mobile-view .progress-container {
-    grid-area: unset;
     order: 1;
     width: 100%;
     display: grid;
@@ -459,13 +461,11 @@ body.mobile-view .progress-container span:last-of-type {
 }
 
 body.mobile-view .transport-controls {
-    grid-area: unset;
     order: 2;
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: clamp(12px, 5vw, 18px);
 }
 
 body.mobile-view .transport-button {
@@ -492,6 +492,7 @@ body.mobile-view .transport-button i {
 body.mobile-view .transport-button--play {
     width: clamp(60px, 18vw, 70px);
     height: clamp(60px, 18vw, 70px);
+    border-radius: 50%;
     background: linear-gradient(135deg, #f36d6d 0%, #f3a25b 100%);
     color: #1f1b1d;
     box-shadow: 0 18px 36px rgba(243, 117, 109, 0.45);
@@ -505,15 +506,7 @@ body.mobile-view #mobileQueueToggle {
     display: inline-flex;
 }
 
-body.mobile-view #shuffleToggleBtn {
-    display: none;
-}
-
 body.mobile-view .audio-tools {
-    display: none;
-}
-
-body.mobile-view .control-trailing {
     display: none;
 }
 
@@ -594,7 +587,6 @@ body.mobile-view .mobile-panel-header {
     grid-template-columns: 1fr auto;
     align-items: center;
     column-gap: 12px;
-    row-gap: 8px;
     color: #ffffff;
 }
 
@@ -607,21 +599,17 @@ body.mobile-view .mobile-panel-handle {
     margin: 0 auto 10px;
 }
 
+body.mobile-view .mobile-panel-title {
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
 body.mobile-view .mobile-panel-actions {
     display: inline-flex;
     align-items: center;
     justify-self: end;
-    gap: 8px;
-}
-
-body.mobile-view .mobile-actions-group {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-}
-
-body.mobile-view .mobile-actions-group[hidden] {
-    display: none !important;
+    gap: 10px;
 }
 
 body.mobile-view .mobile-panel-action-btn,
@@ -714,7 +702,7 @@ body.mobile-view .playlist-items {
 }
 
 body.mobile-view .playlist-items .playlist-item {
-    padding: 12px 108px 12px 18px;
+    padding: 12px 56px 12px 18px;
     white-space: normal;
     line-height: 1.35;
     min-height: 0;
@@ -730,7 +718,6 @@ body.mobile-view .playlist-items .playlist-item:hover {
     transform: none;
 }
 
-body.mobile-view .playlist-items .playlist-item .playlist-item-favorite,
 body.mobile-view .playlist-items .playlist-item .playlist-item-download,
 body.mobile-view .playlist-items .playlist-item .playlist-item-remove {
     width: 28px;
@@ -738,16 +725,12 @@ body.mobile-view .playlist-items .playlist-item .playlist-item-remove {
     border-radius: 8px;
 }
 
-body.mobile-view .playlist-items .playlist-item .playlist-item-favorite {
-    right: 88px;
-}
-
 body.mobile-view .playlist-items .playlist-item .playlist-item-download {
-    right: 48px;
+    right: 52px;
 }
 
 body.mobile-view .playlist-items .playlist-item .playlist-item-remove {
-    right: 12px;
+    right: 14px;
 }
 
 body.mobile-view .playlist-items .playlist-item {
@@ -767,14 +750,6 @@ body.mobile-view .playlist-items .playlist-item:hover,
 body.mobile-view .playlist-items .playlist-item.current {
     background: rgba(243, 162, 91, 0.25);
     color: #ffffff;
-}
-
-body.mobile-view .favorites .favorite-item-action {
-    opacity: 1;
-}
-
-body.mobile-view .favorites .favorite-item-action:hover {
-    transform: translateY(-50%);
 }
 
 body.mobile-view .lyrics {
@@ -809,7 +784,7 @@ body.mobile-view .search-area {
     transform: translateY(-100%);
     transition: transform 0.45s cubic-bezier(0.33, 1, 0.68, 1);
     z-index: 160;
-    padding: calc(env(safe-area-inset-top) + 28px) clamp(18px, 6vw, 28px) clamp(env(safe-area-inset-bottom) + 24px, 8vw, 36px);
+    padding: calc(env(safe-area-inset-top) + 28px) clamp(18px, 6vw, 28px) calc(env(safe-area-inset-bottom) + 24px);
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -851,21 +826,6 @@ body.mobile-view .import-selected-btn {
 body.mobile-view .search-results-list {
     width: min(100%, 340px);
     margin: 0 auto;
-}
-
-body.mobile-view .search-area > :not(.mobile-close-btn) {
-    width: min(100%, 360px);
-    align-self: center;
-}
-
-body.mobile-view .search-area > :not(.mobile-close-btn) {
-    width: min(100%, 340px);
-    align-self: center;
-}
-
-body.mobile-view .search-area > :not(.mobile-close-btn) {
-    width: min(100%, 340px);
-    align-self: center;
 }
 
 body.mobile-view .search-area > :not(.mobile-close-btn) {
@@ -938,4 +898,50 @@ body.mobile-view #notification.show {
 
 body.mobile-view .debug-info {
     display: none;
+}
+
+@media (max-width: 375px) {
+    body.mobile-view .mobile-toolbar__title {
+        font-size: 1rem;
+    }
+
+    body.mobile-view .current-song-title {
+        font-size: 1rem;
+    }
+
+    body.mobile-view .current-song-artist {
+        font-size: 0.85rem;
+    }
+
+    body.mobile-view .album-cover {
+        width: min(70vw, 240px);
+    }
+
+    body.mobile-view .mobile-turntable__platter {
+        width: min(70vw, 240px);
+    }
+
+    body.mobile-view .mobile-inline-lyrics {
+        width: min(70vw, 240px);
+        height: min(70vw, 240px);
+    }
+
+    body.mobile-view .search-input {
+        font-size: 0.9rem;
+    }
+
+    body.mobile-view .mobile-panel-title {
+        font-size: 0.95rem;
+    }
+
+    body.mobile-view .transport-button {
+        width: clamp(42px, 12vw, 48px);
+        height: clamp(42px, 12vw, 48px);
+    }
+
+    body.mobile-view .transport-button--play {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+    }
 }
